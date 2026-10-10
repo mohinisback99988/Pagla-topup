@@ -1,0 +1,145 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#10091f">
+<title>Pagla TopUp — Gaming Top-Ups</title>
+<style>
+:root{--bg:#10091f;--panel:#1c1230;--purple:#a855f7;--pink:#ec4899;--muted:#b9adc9;--line:#352448}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:#fff;font:15px Arial,sans-serif}
+header{padding:17px 5%;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);background:#130b22;position:sticky;top:0;z-index:5}
+.logo{font-size:22px;font-weight:900}.logo span{color:#c084fc}
+button,a{cursor:pointer}button{border:0;border-radius:9px;padding:11px 15px;background:var(--purple);color:white;font-weight:bold}
+nav{display:flex;gap:18px;align-items:center}nav a{color:white;text-decoration:none}
+main{max-width:1100px;margin:auto;padding:24px 18px}
+.hero{padding:48px 28px;border:1px solid #63369b;border-radius:20px;background:radial-gradient(ellipse at 90% 10%,#6327a1 0,transparent 45%),linear-gradient(120deg,#241039,#151024);margin:12px 0 28px}
+.eyebrow{color:#d8b4fe;font-weight:bold;letter-spacing:2px;font-size:12px}
+h1{font-size:clamp(32px,6vw,54px);line-height:1.08;margin:13px 0}
+.hero p,.muted{color:var(--muted);line-height:1.7}
+.search{width:100%;padding:14px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:white;margin:8px 0 20px}
+h2{font-size:23px;margin-top:28px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:15px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:17px}
+.gameicon{height:105px;display:grid;place-items:center;border-radius:11px;background:linear-gradient(135deg,#412064,#201331);font-size:40px}
+.card h3{margin-bottom:5px}.price{font-size:19px;font-weight:bold;color:#d8b4fe}
+.card button{width:100%;margin-top:10px}
+section{margin-bottom:30px}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.step{padding:18px;border:1px solid var(--line);border-radius:12px;background:#171025}
+footer{border-top:1px solid var(--line);padding:25px 5%;color:var(--muted);text-align:center}
+.hidden{display:none!important}
+label{display:block;margin:12px 0 6px;color:#ddd}
+input,select{width:100%;padding:12px;border-radius:8px;border:1px solid var(--line);background:#10091f;color:white}
+.dialog{position:fixed;inset:0;background:#000b;z-index:10;display:grid;place-items:center;padding:15px}
+.modal{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:22px;width:min(100%,430px);max-height:90vh;overflow:auto}
+.close{float:right;background:#382747}
+.small{font-size:12px;color:var(--muted)}
+@media(max-width:550px){header{padding:14px 4%}nav{gap:10px}nav a{font-size:13px}.logo{font-size:18px}.hero{padding:32px 20px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">PAGLA <span>TOPUP</span></div>
+  <nav><a href="#games">Games</a><a href="#how">How it works</a><button onclick="showOrderHistory()">My Orders</button></nav>
+</header>
+<main>
+  <section class="hero">
+    <div class="eyebrow">YOUR GAMING TOP-UP DESTINATION</div>
+    <h1>Power up your<br><span style="color:#d8b4fe">next victory.</span></h1>
+    <p>Find your game, choose a package and submit your order.<br>Friendly support for Bangladesh gamers.</p>
+    <button onclick="document.querySelector('#games').scrollIntoView({behavior:'smooth'})">Explore Top-Ups ↓</button>
+  </section>
+
+  <section id="games">
+    <h2>Popular Games</h2>
+    <p class="muted">Choose a game to view available packages.</p>
+    <input id="search" class="search" placeholder="Search games..." oninput="filterGames()">
+    <div class="grid" id="gameGrid"></div>
+  </section>
+
+  <section id="how">
+    <h2>How it works</h2>
+    <div class="steps">
+      <div class="step"><h3>01 · Choose</h3><p class="muted">Select your game and package.</p></div>
+      <div class="step"><h3>02 · Player ID</h3><p class="muted">Enter the correct player details.</p></div>
+      <div class="step"><h3>03 · Order</h3><p class="muted">Submit your request and follow the instructions from support.</p></div>
+    </div>
+  </section>
+  <section class="card">
+    <h2>Need help?</h2>
+    <p class="muted">Contact the Pagla TopUp support team for order questions.</p>
+    <a id="supportLink" href="mailto:support@example.com" style="color:#d8b4fe">Contact Support</a>
+  </section>
+</main>
+<footer>© <span id="year"></span> Pagla TopUp · Independent gaming top-up store</footer>
+
+<div id="orderDialog" class="dialog hidden">
+ <div class="modal">
+  <button class="close" onclick="closeDialog('orderDialog')">Close</button>
+  <h2 id="orderTitle">Place an order</h2>
+  <p class="muted" id="orderPrice"></p>
+  <form id="orderForm">
+   <label>Player ID</label><input id="playerId" required placeholder="Enter your Player ID">
+   <label>Server / Zone ID (if needed)</label><input id="zoneId" placeholder="Enter Server or Zone ID">
+   <label>Contact email (optional)</label><input id="contactEmail" type="email" placeholder="you@example.com">
+   <p class="small">This demo does not process payments or deliver game credits. Your order is stored only in this browser.</p>
+   <button type="submit" style="width:100%">Submit demo order</button>
+  </form>
+ </div>
+</div>
+
+<div id="historyDialog" class="dialog hidden">
+ <div class="modal">
+  <button class="close" onclick="closeDialog('historyDialog')">Close</button>
+  <h2>My Demo Orders</h2><div id="historyList" class="muted"></div>
+ </div>
+</div>
+
+<script>
+const games=[
+ {name:"Free Fire",icon:"🔥",items:[{name:"100 Diamonds",price:100},{name:"310 Diamonds",price:280},{name:"520 Diamonds",price:450}]},
+ {name:"Mobile Legends",icon:"⚔️",items:[{name:"86 Diamonds",price:120},{name:"172 Diamonds",price:230},{name:"257 Diamonds",price:340}]},
+ {name:"PUBG Mobile",icon:"🎯",items:[{name:"60 UC",price:130},{name:"325 UC",price:650},{name:"660 UC",price:1250}]},
+ {name:"Call of Duty Mobile",icon:"🎮",items:[{name:"80 CP",price:120},{name:"420 CP",price:550}]}
+];
+let selected=null;
+const money=n=>"৳"+n;
+function renderGames(list=games){
+ const grid=document.getElementById("gameGrid");grid.innerHTML="";
+ list.forEach(g=>{
+  const el=document.createElement("article");el.className="card";
+  const icon=document.createElement("div");icon.className="gameicon";icon.textContent=g.icon;
+  const title=document.createElement("h3");title.textContent=g.name;
+  const desc=document.createElement("p");desc.className="muted";desc.textContent="Available packages:";
+  el.append(icon,title,desc);
+  g.items.forEach(item=>{
+   const row=document.createElement("div");row.style.cssText="display:flex;justify-content:space-between;gap:8px;align-items:center;margin:12px 0";
+   const label=document.createElement("span");label.textContent=item.name;
+   const price=document.createElement("span");price.className="price";price.textContent=money(item.price);
+   row.append(label,price);el.append(row);
+   const btn=document.createElement("button");btn.textContent="Order now";btn.onclick=()=>openOrder(g,item);el.append(btn);
+  });grid.append(el);
+ });
+}
+function filterGames(){const q=document.getElementById("search").value.toLowerCase();renderGames(games.filter(g=>g.name.toLowerCase().includes(q)))}
+function openOrder(game,item){selected={game:game.name,...item};document.getElementById("orderTitle").textContent=game.name+" — "+item.name;document.getElementById("orderPrice").textContent="Package price: "+money(item.price);document.getElementById("orderDialog").classList.remove("hidden")}
+function closeDialog(id){document.getElementById(id).classList.add("hidden")}
+document.getElementById("orderForm").addEventListener("submit",e=>{
+ e.preventDefault();const orders=JSON.parse(localStorage.getItem("paglaDemoOrders")||"[]");
+ orders.push({game:selected.game,package:selected.name,price:selected.price,player:document.getElementById("playerId").value,zone:document.getElementById("zoneId").value,date:new Date().toLocaleString(),status:"Demo only"});
+ localStorage.setItem("paglaDemoOrders",JSON.stringify(orders));
+ alert("Demo order saved in this browser only. No payment was made and no top-up was delivered.");
+ e.target.reset();closeDialog("orderDialog");
+});
+function showOrderHistory(){const orders=JSON.parse(localStorage.getItem("paglaDemoOrders")||"[]");const box=document.getElementById("historyList");box.innerHTML="";
+ if(!orders.length){box.textContent="No demo orders in this browser."; } else orders.forEach(o=>{const p=document.createElement("p");p.textContent=o.game+" · "+o.package+" · "+money(o.price)+" · "+o.date;box.append(p)});
+ document.getElementById("historyDialog").classList.remove("hidden");
+}
+document.getElementById("year").textContent=new Date().getFullYear();
+renderGames();
+</script>
+</body>
+</html>
