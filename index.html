@@ -140,6 +140,13 @@ function showOrderHistory(){const orders=JSON.parse(localStorage.getItem("paglaD
 }
 document.getElementById("year").textContent=new Date().getFullYear();
 renderGames();
-</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>  
+</script>const SUPABASE_URL = "https://zbpikktujljqfzzqozdb.supabase.co/rest/v1/";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__LRGl-qFR_QT8hvrVI1rWA_yVHtq4k0";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
 </body>
 </html>
